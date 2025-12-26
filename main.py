@@ -684,13 +684,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- API ANAHTARI ---
-# Şifreyi koddan değil, sunucunun gizli kasasından çekiyoruz
 api_key = st.secrets["OPENAI_API_KEY"]
 client = OpenAI(api_key=api_key)
 # --- GERÇEK MAİL GÖNDERME FONKSİYONU ---
 def mail_gonder(alici_mail, kod):
-    sender_email = "oykud8826@gmail.com"  # Örn: ahmet@gmail.com
-    sender_password = "ofdrgkqnppyhlzqz " # Boşluksuz yaz
+    sender_email = "oykud8826@gmail.com"  
+    sender_password = "ofdrgkqnppyhlzqz " 
    
     subject = "Nexi - Doğrulama Kodunuz"
     body = f"""
@@ -811,7 +810,7 @@ if not st.session_state.giris_yapildi:
         # AŞAMA 2: KOD DOĞRULAMA
         else:
             st.info(txt['info_code_sent'].format(email=st.session_state.girilen_mail))
-            # (Test ederken mail beklemek istemezsen bu satırı açabilirsin)
+            
             #print(f"GİZLİ KOD: {st.session_state.dogrulama_kodu}")
 
             girilen_kod = st.text_input(txt["kodgir"], max_chars=4, placeholder="XXXX")
@@ -841,8 +840,6 @@ if not st.session_state.giris_yapildi:
                     st.rerun()
     st.stop() # Giriş yoksa dur
 # --- BİLGİ BANKASI ---
-# --- AKILLI VERİ TABANI (DETAYLANDIRILMIŞ VERSİYON) ---
-# --- 5. VERİTABANI (ÇİFT DİLLİ - TAM DETAYLI) ---
 country_data = {
     " Germany": {
         # --- İNGİLİZCE İÇERİK ---
@@ -878,7 +875,7 @@ country_data = {
            - Min Wage: Approx. 12.41 Euro/hour.
         """,
 
-        # --- TÜRKÇE İÇERİK (SENİN METİNLERİN) ---
+        # --- TÜRKÇE İÇERİK  ---
         "check_tr": [
             "Pasaport (En az 1 yıl geçerli + 2 fotokopi)",
             "Okul Kabul Belgesi (Zulassungsbescheid)",
@@ -1059,11 +1056,10 @@ country_data = {
 
 
    
-# --- YAN MENÜ (Kısa ve Öz) ---
-# --- YAN MENÜ (SIDEBAR) - GÜNCELLENMİŞ HALİ ---
+# --- YAN MENÜ ---
 with st.sidebar:
-    # 1. PROFİL KARTI (DİNAMİK - GİRİŞ YAPAN İSMİ GÖSTERİR)
-    aktif_kullanici = st.session_state.kullanici_adi  # Giriş ekranından gelen isim
+    # 1. PROFİL KARTI 
+    aktif_kullanici = st.session_state.kullanici_adi  
    
     st.markdown(f"""
     <div style="background-color: #F2E8E8; padding: 15px; border-radius: 10px; margin-bottom: 20px; border;">
@@ -1086,8 +1082,7 @@ with st.sidebar:
         st.session_state.son_secilen_ulke = secilen_ulke
        
     if st.session_state.son_secilen_ulke != secilen_ulke:
-        # AI Beynini de dile göre güncelliyoruz!
-        # txt['ai_instr'] -> "Answer in English" veya "Türkçe cevapla" emrini içerir
+        
         st.session_state.messages = [{
             "role": "system",
             "content": f"Sen {secilen_ulke} uzmanısın. BİLGİLER: {aktif_veri['info']}. {txt['ai_instr']}"
@@ -1112,7 +1107,7 @@ with st.sidebar:
     # --- 4. RAPOR İNDİRME BUTONU (DİNAMİK) ---
     aktif_kullanici = st.session_state.get("kullanici_adi", "Misafir")
 
-    # BURASI SİHİRLİ KISIM:
+    
     # 1. txt['report_content'] ile dile göre şablonu çekiyor.
     # 2. .format(...) ile boşlukları dolduruyor.
     rapor_icerigi = txt['report_content'].format(
@@ -1159,7 +1154,7 @@ with tab1:
         # Başlık: "{secilen_ulke} Application Steps"
         st.subheader(f"📌 {secilen_ulke} {txt['t1_head']}")
        
-        # Dile göre doğru checklist listesini seçiyoruz (check_en veya check_tr)
+        # Dile göre doğru checklist listesini seçme
         checklist_key = "check_en" if st.session_state.lang == "en" else "check_tr"
        
         # Döngü
@@ -1188,7 +1183,7 @@ with tab1:
                         </div>
                         """, unsafe_allow_html=True)
 
-    # --- SAĞ SÜTUN: BELGE TARAYICI VE 3 SİHİRLİ BUTON ---
+    # --- SAĞ SÜTUN: BELGE TARAYICI VE 3  BUTON ---
     with c2:
         st.subheader(txt['quick_actions']) # "Hızlı İşlemler"
         st.info(txt['doc_analysis_info'])  # "Belge Analizi"
@@ -1204,7 +1199,7 @@ with tab1:
                     try:
                         b64 = encode_image(uploaded_file)
                        
-                        # AI Komutunu dilden çekiyoruz ve içine ülkeyi koyuyoruz
+                        
                         prompt_text = txt['vision_prompt'].format(country=secilen_ulke)
                        
                         res = client.chat.completions.create(
@@ -1304,7 +1299,7 @@ with tab2:
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
             except Exception as e:
                 st.error(txt['conn_error'])
-# --- TAB 3: FİNANS MERKEZİ (DİNAMİK & ÇİFT DİLLİ) ---
+# --- TAB 3: FİNANS MERKEZİ ---
 with tab3:
     st.header(f"{secilen_ulke} {txt['t3_header']}")
    
@@ -1313,7 +1308,7 @@ with tab3:
 
     # --- ALT SEKME 1: TAŞINMA MALİYETİ ---
     with butce_tab1:
-        # Caption içindeki {country} kısmını dolduruyoruz
+        
         st.caption(txt['t3_caption'].format(country=secilen_ulke))
        
         col_b1, col_b2 = st.columns([1, 1], gap="large")
@@ -1344,7 +1339,7 @@ with tab3:
         toplam_start = fixed + variable
         st.metric(txt['total_start'], f"{toplam_start} €")
 
-    # --- ALT SEKME 2: AYLIK HARCAMA TAKİBİ (AYNI KALDI, SADECE LİMİT DİNAMİK) ---
+    # --- ALT SEKME 2: AYLIK HARCAMA TAKİBİ ---
     with butce_tab2:
         st.subheader(" Giderlerini Kaydet")
         st.caption(f"{secilen_ulke}'daki aylık harcamalarını buraya not al.")
@@ -1405,7 +1400,7 @@ with tab3:
             # --- ALT SEKME 2: AYLIK HARCAMA TAKİBİ (DİL DESTEKLİ) ---
     with butce_tab2:
         st.subheader(txt['t3_wallet_head'])
-        # Ülke ismini metnin içine yerleştiriyoruz
+        
         st.caption(txt['t3_wallet_caption'].format(country=secilen_ulke))
 
         # Hafıza (Session State)
@@ -1469,7 +1464,7 @@ with tab3:
 with tab4:
     st.subheader(f"{secilen_ulke} {txt['t4_header']}")
    
-    # İKİ GÜÇLÜ ÖZELLİK YAN YANA (DİL DESTEKLİ)
+ 
     yasam_tab1, yasam_tab2 = st.tabs(txt['t4_tabs'])
 
     # --- 1. AKILLI EV BULUCU ---
@@ -1523,7 +1518,7 @@ with tab4:
                            
                             c_lnk1, c_lnk2 = st.columns(2)
                            
-                            # Ülkeye Göre Link Oluşturma (Mantık aynı kalıyor)
+                            # Ülkeye Göre Link Oluşturma 
                             if "Almanya" in secilen_ulke:
                                 link1 = f"https://www.wg-gesucht.de/wg-zimmer-in-{sehir.replace('ü','ue').replace('ö','oe')}.0.1.1.0.html?offer_filter=1&noDeact=1&rMax={butce_limit}"
                                 site1 = "WG-Gesucht"
@@ -1576,7 +1571,7 @@ with tab4:
                         st.write(res.choices[0].message.content)
                        
                         # Harita Linki (Modun içindeki emojiyi veya kelimeyi kullanır)
-                        # split(' ')[1] ile emojiden sonraki ilk kelimeyi alıyoruz
+                       
                         keyword = gezi_modu.split(' ')[1] if len(gezi_modu.split(' ')) > 1 else gezi_modu
                         maps_url = f"https://www.google.com/maps/search/{gezi_sehir}+{keyword}"
                        
@@ -1649,7 +1644,7 @@ with tab5:
                     st.rerun()
         # --- SAĞ: KİŞİ KARTLARI (ÇİFT DİLLİ) ---
         with c2:
-            # Başlık: "{secilen_ulke} Yolcuları" veya "{country} Travelers"
+            # Başlık: "{secilenulke} Yolcuları" veya "{country} Travelers"
             st.write(txt['bud_list_header'].format(country=secilen_ulke))
            
             # Filtreleme Mantığı (txt['filter_all'] ile dil uyumlu kontrol)
@@ -1673,7 +1668,7 @@ with tab5:
                    
                     with c_detay:
                         st.markdown(f"**{kisi['Ad']}** <span style='color:grey; font-size:12px;'>({kisi['Bölüm']})</span>", unsafe_allow_html=True)
-                        st.caption(f"📍 {kisi['Şehir']} | 📅 Gidiş: {kisi['Tarih']}")
+                        st.caption(f"📍 {kisi['Ş1hir']} | 📅 Gidiş: {kisi['Tarih']}")
                         st.markdown(etiketler, unsafe_allow_html=True)
                        
                     with c_aksiyon:
@@ -1698,7 +1693,7 @@ with tab5:
             try: items = json.load(f)
             except: items = []
 
-        st.warning(txt['market_security_warn']) # Güvenlik uyarısı
+        st.warning(txt['market_security_warn']) .
 
         col_m1, col_m2 = st.columns([1.3, 1], gap="large")
        
@@ -1779,7 +1774,7 @@ with tab5:
                     else:
                         gorsel_yolu = None
                         if foto:
-                            # Benzersiz dosya ismi
+                            
                             dosya_adi = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{foto.name}"
                             gorsel_yolu = os.path.join(UPLOAD_DIR, dosya_adi)
                             with open(gorsel_yolu, "wb") as f: f.write(foto.getbuffer())
@@ -1793,7 +1788,7 @@ with tab5:
                         with open(MARKET_FILE, "w", encoding="utf-8") as f: json.dump(items, f, ensure_ascii=False, indent=4)
                         st.success(txt['mkt_success_msg'])
                         st.rerun()
-    # --- 3. SOSYAL AKIŞ (INSTAGRAM TARZI & DİL DESTEKLİ) ---
+    # --- 3. SOSYAL AKIŞ--
     with sosyal_tab3:
         SOCIAL_FILE = f"social_{secilen_ulke}.json"
         UPLOAD_DIR = "uploads"
@@ -1961,7 +1956,6 @@ with tab6:
         }
     }
     
-    # Seçilen ülkenin isminden emojiyi ve boşluğu temizleyip saf ismini alıyoruz (Örn: "🇩🇪 Germany" -> "Germany")
     saf_ulke_ismi = secilen_ulke.split(" ")[-1] 
     
     # Veriyi Çekme (Hata olursa Germany varsayılan)
@@ -1978,10 +1972,9 @@ with tab6:
     with c_sos1:
         st.write(txt['sos_advisor_head'])
         
-        # Radyo butonuna benzersiz key ekledik
+       
         durum = st.radio(txt['sos_radio_label'], txt['sos_radio_opts'], key="sos_durum_radio") 
         
-        # Butona benzersiz key ekledik
         if st.button(txt['sos_help_btn'], key="sos_help_button"):
             with st.spinner(txt['sos_spinner']):
                 try:
